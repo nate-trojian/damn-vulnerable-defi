@@ -39,7 +39,16 @@ describe('[Challenge] Unstoppable', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */
+        /* Q: When can flashLoan fail?
+           A: When poolBalance does not equal balanceBefore.
+
+           Pool balance is only tracked in depositTokens, so attack is based around that.
+           We can't call depositTokens from flashLoan because of the Rentrant Guard,
+           so we just need to add tokens outside of depositTokens to offset poolBalance
+           Doing it in a flash loan adds back what we subtracted, so balance still equals poolBalance,
+           so we do it outside of one
+        */
+        await this.token.connect(attacker).transfer(this.pool.address, INITIAL_ATTACKER_TOKEN_BALANCE);
     });
 
     after(async function () {
