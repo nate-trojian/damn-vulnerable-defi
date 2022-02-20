@@ -41,8 +41,8 @@ describe('[Challenge] Truster', function () {
 
         // Solution in one transaction
         const attackerContractFactory = await ethers.getContractFactory('TrusterAttacker', attacker);
-        const attackerContract = await attackerContractFactory.deploy()
-        await attackerContract.connect(attacker).attack(this.pool.address, this.token.address) 
+        const attackerContract = await attackerContractFactory.deploy();
+        await attackerContract.connect(attacker).attack(this.pool.address, this.token.address);
     });
 
     after(async function () {
